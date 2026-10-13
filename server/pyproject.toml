@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "task-tracker"
 version = "0.1.0"
 description = "A small self-hosted tracker where people and AI agents plan, do and verify work together."
-readme = "../README.md"
+readme = "README.md"
 license = { text = "Apache-2.0" }
 requires-python = ">=3.11"
 dependencies = [
