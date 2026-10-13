@@ -61,3 +61,27 @@ def captured(monkeypatch):
     from tracker import routes
     monkeypatch.setattr(routes, "broadcast_sync_event", record)
     return seen
+
+
+# ---------------------------------------------------------------- CI: failures as GitHub annotations
+
+def _annotate(nodeid: str, text: str) -> None:
+    """On GitHub Actions, a failure becomes an error annotation (shown on the run's page and in its API)."""
+    import os
+    import sys
+    if not os.environ.get("GITHUB_ACTIONS"):
+        return
+    body = text[-3500:].replace("%", "%25").replace("\r", "").replace("\n", "%0A")
+    path = nodeid.split("::", 1)[0]
+    sys.__stdout__.write(f"::error file=server/{path},title={nodeid}::{body}\n")
+    sys.__stdout__.flush()
+
+
+def pytest_runtest_logreport(report):
+    if report.failed:
+        _annotate(report.nodeid, str(report.longrepr))
+
+
+def pytest_collectreport(report):
+    if report.failed:
+        _annotate(report.nodeid or "collection", str(report.longrepr))
