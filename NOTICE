@@ -1,0 +1,8 @@
+Task Tracker
+Copyright 2026 The Task Tracker authors
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+It bundles fonts licensed under the SIL Open Font License 1.1 (Instrument Sans, Newsreader and
+Geist Mono, via the @fontsource-variable packages) and depends on third-party packages under their
+own licences; see docs/THIRD_PARTY.md.

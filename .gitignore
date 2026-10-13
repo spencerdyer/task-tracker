@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+server/.venv/
+*.egg-info/
+.pytest_cache/
+# Node
+web/node_modules/
+web/dist/
+# Local data (the database and attachments)
+data/
+*.db
+*.db-wal
+*.db-shm
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/

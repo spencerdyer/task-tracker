@@ -1,0 +1,56 @@
+/* Tailwind 4 with the utilities left unlayered (as in Tailwind 3): an unlayered element rule would otherwise
+   beat every utility class, whatever its specificity. The tokens and resets come first, then Tailwind 3's
+   preflight, then the utilities. */
+@layer theme;
+@import 'tailwindcss/theme.css' layer(theme);
+@import './tokens.css';
+@import './preflight-v3.css';
+@tailwind utilities;
+
+/* In Tailwind 3 a bare `border` set only the width, and the .nb-scope resets give buttons and fields
+   border-style none, so it drew nothing on them. Tailwind 4 takes the style from --tw-border-style: keeping it
+   none here keeps that look, while `border-solid` still draws. */
+:where(.nb-scope) :is(button, input, textarea) {
+  --tw-border-style: none;
+}
+
+/* Tailwind 3's space-y: the gap on each later visible sibling, at class specificity. */
+:where(.space-y-0\.5 > :not(:last-child)),
+:where(.space-y-1 > :not(:last-child)) {
+  margin-block: 0;
+}
+.space-y-0\.5 > :not([hidden]) ~ :not([hidden]) { margin-top: calc(var(--spacing) * 0.5); margin-bottom: 0; }
+.space-y-1 > :not([hidden]) ~ :not([hidden]) { margin-top: calc(var(--spacing) * 1); margin-bottom: 0; }
+
+@theme inline {
+  --color-nb-bg: var(--nb-bg);
+  --color-nb-surface: var(--nb-surface);
+  --color-nb-sidebar: var(--nb-sidebar);
+  --color-nb-raised: var(--nb-raised);
+  --color-nb-border: var(--nb-border);
+  --color-nb-border-strong: var(--nb-border-strong);
+  --color-nb-chosen: var(--nb-chosen);
+  --color-nb-text: var(--nb-text);
+  --color-nb-text-2: var(--nb-text-2);
+  --color-nb-text-3: var(--nb-text-3);
+  --color-nb-accent: var(--nb-accent);
+  --color-nb-accent-fg: var(--nb-accent-fg);
+  --color-nb-accent-text: var(--nb-accent-text);
+  --color-nb-accent-soft: var(--nb-accent-soft);
+  --color-nb-selected: var(--nb-selected);
+  --color-nb-hover: var(--nb-hover);
+  --color-nb-danger: var(--nb-danger);
+  --color-nb-danger-text: var(--nb-danger-text);
+  --color-nb-danger-soft: var(--nb-danger-soft);
+  --color-nb-success: var(--nb-success);
+  --color-nb-success-soft: var(--nb-success-soft);
+  --color-nb-warning: var(--nb-warning);
+  --color-nb-warning-soft: var(--nb-warning-soft);
+  --color-nb-scrim: var(--nb-scrim);
+
+  --font-ui: var(--nb-font-ui);
+  --font-mono: var(--nb-font-mono);
+  --font-read: var(--nb-font-read);
+
+  --shadow-nb: var(--nb-shadow);
+}

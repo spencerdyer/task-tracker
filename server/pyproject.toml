@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "task-tracker"
+version = "0.1.0"
+description = "A small self-hosted tracker where people and AI agents plan, do and verify work together."
+readme = "../README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi==0.128.8",
+    "starlette==0.52.1",
+    "uvicorn[standard]==0.54.0",
+    "python-multipart==0.0.20",
+    "sqlalchemy==2.0.54",
+]
+
+[project.optional-dependencies]
+test = ["pytest==8.3.5", "httpx==0.28.1"]
+
+[project.scripts]
+tracker-server = "tracker.main:run"
+tracker-seed = "tracker.seed:main"
+
+[tool.setuptools]
+packages = ["tracker"]
+
+[tool.setuptools.package-data]
+tracker = ["guide.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

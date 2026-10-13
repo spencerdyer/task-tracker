@@ -1,0 +1,121 @@
+/* The "Paper" palette: every colour and font the app uses comes from these tokens. Light on :root, dark on
+   .dark (set on <html> by the theme toggle, or by the device's preference until one is chosen). Components
+   read them through Tailwind names (bg-nb-surface, text-nb-text-2, …) defined in main.css. */
+:root {
+  --nb-bg: #faf7f2;
+  --nb-surface: #f3eee6;
+  --nb-sidebar: #f5f0e8;
+  --nb-raised: #ffffff;
+  --nb-border: #e2d9cc;
+  --nb-chosen: #e2d9cc;
+  --nb-border-strong: #d3c8b8;
+  --nb-text: #2b241c;
+  --nb-text-2: #65594b;
+  --nb-text-3: #6e6355;
+  --nb-accent: #a85d17;
+  --nb-accent-fg: #ffffff;
+  --nb-accent-text: #824c0d;
+  --nb-accent-soft: rgba(168, 93, 23, 0.10);
+  --nb-selected: #ebe1d3;
+  --nb-hover: rgba(34, 29, 23, 0.05);
+  --nb-danger: #c4503d;
+  --nb-danger-fg: #ffffff;
+  --nb-danger-text: #a03a2a;
+  --nb-danger-soft: rgba(196, 80, 61, 0.10);
+  --nb-success: #16653e;
+  --nb-success-soft: rgba(31, 122, 77, 0.12);
+  --nb-warning: #6b570b;
+  --nb-warning-soft: rgba(122, 100, 16, 0.12);
+  --nb-scrim: rgba(34, 29, 23, 0.35);
+  --nb-shadow: 0 12px 32px rgba(34, 29, 23, 0.14);
+  --nb-font-ui: 'Instrument Sans Variable', 'SF Pro Text', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --nb-font-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+  --nb-font-read: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
+  color-scheme: light;
+}
+
+.dark {
+  --nb-bg: #1a1816;
+  --nb-surface: #2a2622;
+  --nb-sidebar: #201d1a;
+  --nb-raised: #2f2b26;
+  --nb-border: #3a342d;
+  --nb-chosen: #4a4239;
+  --nb-border-strong: #4a4239;
+  --nb-text: #f0e9df;
+  --nb-text-2: #b8ad9c;
+  --nb-text-3: #a39887;
+  --nb-accent: #e8a95e;
+  --nb-accent-fg: #24180a;
+  --nb-accent-text: #f0b46a;
+  --nb-accent-soft: rgba(232, 169, 94, 0.14);
+  --nb-selected: #33291f;
+  --nb-hover: rgba(240, 233, 223, 0.05);
+  --nb-danger: #e5786a;
+  --nb-danger-fg: #24180a;
+  --nb-danger-text: #f0a094;
+  --nb-danger-soft: rgba(229, 120, 106, 0.12);
+  --nb-success: #7cc49a;
+  --nb-success-soft: rgba(124, 196, 154, 0.14);
+  --nb-warning: #d8c36a;
+  --nb-warning-soft: rgba(216, 195, 106, 0.14);
+  --nb-scrim: rgba(10, 9, 8, 0.6);
+  --nb-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--nb-font-ui);
+  background-color: var(--nb-bg);
+  color: var(--nb-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Components style elements with utility classes. Inside .nb-scope the browser's own button and field looks
+   are reset; :where() keeps these at element specificity, so any class still wins. */
+:where(.nb-scope) button {
+  padding: 0;
+  background-color: transparent;
+  color: inherit;
+  border: 0;
+  border-radius: 0;
+}
+
+:where(.nb-scope) :is(input, textarea) {
+  width: auto;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  color: inherit;
+}
+
+:where(.nb-scope) :is(h1, h2, h3, p) {
+  color: inherit;
+  margin: 0;
+}
+
+/* The audio player's seek bar */
+.nb-range { -webkit-appearance: none; appearance: none; background: transparent; height: 12px; }
+.nb-range::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(to right, var(--nb-accent) var(--nb-range-fill, 0%), var(--nb-border-strong) var(--nb-range-fill, 0%)); }
+.nb-range::-moz-range-track { height: 4px; border-radius: 2px; background: var(--nb-border-strong); }
+.nb-range::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--nb-accent); }
+.nb-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 12px; height: 12px; margin-top: -4px; border-radius: 50%; background: var(--nb-accent); border: none; }
+.nb-range::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--nb-accent); border: none; }
+.nb-range:disabled::-webkit-slider-thumb { background: var(--nb-border-strong); }
+.nb-range:disabled::-moz-range-thumb { background: var(--nb-border-strong); }
+.nb-range:focus-visible { outline: 2px solid var(--nb-accent); outline-offset: 2px; border-radius: 4px; }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--nb-border-strong) transparent;
+}
