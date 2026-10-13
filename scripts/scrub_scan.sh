@@ -43,10 +43,15 @@ if [ -n "${SCRUB_WORDS_FILE:-}" ]; then
   else
     hits=$(grep -rIilwF "${EXCLUDE[@]}" -f <(grep -v '^\s*$' "$SCRUB_WORDS_FILE") . || true)
     if [ -n "$hits" ]; then echo "matches in:"; echo "$hits"; found=1; else echo "none"; fi
-    if [ -d .git ] && git log --all -p | grep -iwqF -f <(grep -v '^\s*$' "$SCRUB_WORDS_FILE"); then
-      echo "matches in git history"; found=1
+    if [ -d .git ] && git log --all -p --format= | grep -iwqF -f <(grep -v '^\s*$' "$SCRUB_WORDS_FILE"); then
+      echo "matches in git history (file contents or messages)"; found=1
     fi
   fi
+fi
+
+if [ -d .git ]; then
+  section "commit authors and committers (check these by eye)"
+  git log --all --format='%an <%ae>  |  %cn <%ce>' | sort | uniq -c
 fi
 
 section "result"
