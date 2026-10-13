@@ -4,6 +4,11 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 PY=${PYTHON:-python3}
+if ! "$PY" -c 'import sys; sys.exit(sys.version_info < (3, 11))' 2>/dev/null; then
+  echo "Task Tracker needs Python 3.11 or newer ($PY is $("$PY" --version 2>&1 || echo missing))."
+  echo "Point PYTHON at one, e.g. PYTHON=python3.12 ./run.sh"
+  exit 1
+fi
 if [ ! -x server/.venv/bin/tracker-server ]; then
   echo "Setting up the server (first run)..."
   "$PY" -m venv server/.venv
