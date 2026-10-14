@@ -54,6 +54,21 @@ def is_active(content_type: Optional[str]) -> bool:
     return t in ACTIVE_TYPES or t.endswith("+xml") and not t == "image/svg+xml"
 
 
+# Types guessed from a file name come from Python's built-in table plus the few below, never from the
+# system's mime.types file, so the type recorded for an upload is the same on every operating system
+# (macOS and Ubuntu, for example, disagree on .m3u).
+_NAMES = mimetypes.MimeTypes(filenames=())
+for _type, _ext in (("text/markdown", ".md"), ("text/markdown", ".markdown"), ("text/plain", ".log"),
+                    ("audio/mp4", ".m4a"), ("audio/aac", ".aac"), ("audio/ogg", ".ogg"), ("audio/ogg", ".oga"),
+                    ("audio/opus", ".opus"), ("audio/flac", ".flac"), ("audio/webm", ".weba"), ("video/webm", ".webm"),
+                    ("video/x-matroska", ".mkv"), ("audio/x-mpegurl", ".m3u"), ("application/vnd.apple.mpegurl", ".m3u8")):
+    _NAMES.add_type(_type, _ext)
+
+
+def guess_type(filename: str) -> Optional[str]:
+    return _NAMES.guess_type(filename)[0]
+
+
 # Playlists name other addresses for the player to fetch: they keep the sandbox like any other file
 PLAYLIST_TYPES = {"audio/mpegurl", "audio/x-mpegurl", "application/vnd.apple.mpegurl", "application/x-mpegurl",
                   "audio/x-scpls", "video/vnd.mpegurl"}
@@ -76,7 +91,7 @@ def recorded_mime(filename: Optional[str], claimed: Optional[str]) -> str:
     t = base_type(claimed)
     if t == "application/octet-stream" or (t.startswith(("audio/", "video/")) and ext not in _MEDIA_EXTENSIONS):
         t = ""  # curl's octet-stream says nothing; a media type the name doesn't back isn't believed
-    return safe_mime(t or mimetypes.guess_type(name)[0] or "application/octet-stream")
+    return safe_mime(t or guess_type(name) or "application/octet-stream")
 
 
 def safe_mime(content_type: Optional[str]) -> str:

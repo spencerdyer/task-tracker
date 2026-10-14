@@ -65,23 +65,19 @@ def captured(monkeypatch):
 
 # ---------------------------------------------------------------- CI: failures as GitHub annotations
 
-def _annotate(nodeid: str, text: str) -> None:
-    """On GitHub Actions, a failure becomes an error annotation (shown on the run's page and in its API)."""
+def _escape(text: str) -> str:
+    return text.replace("%", "%25").replace("\r", "").replace("\n", "%0A")
+
+
+def pytest_terminal_summary(terminalreporter):
+    """On GitHub Actions, each failure or error becomes an error annotation (shown on the run's page and in
+    its API). Written here, after pytest has stopped capturing output, so the runner sees the lines."""
     import os
-    import sys
     if not os.environ.get("GITHUB_ACTIONS"):
         return
-    body = text[-3500:].replace("%", "%25").replace("\r", "").replace("\n", "%0A")
-    path = nodeid.split("::", 1)[0]
-    sys.__stdout__.write(f"::error file=server/{path},title={nodeid}::{body}\n")
-    sys.__stdout__.flush()
-
-
-def pytest_runtest_logreport(report):
-    if report.failed:
-        _annotate(report.nodeid, str(report.longrepr))
-
-
-def pytest_collectreport(report):
-    if report.failed:
-        _annotate(report.nodeid or "collection", str(report.longrepr))
+    for kind in ("failed", "error"):
+        for report in terminalreporter.stats.get(kind, []):
+            nodeid = getattr(report, "nodeid", "") or "collection"
+            path = nodeid.split("::", 1)[0] or "tests"
+            title = _escape(nodeid).replace(",", "%2C").replace("::", " ")
+            terminalreporter.write_line(f"::error file=server/{path},title={title}::{_escape(str(report.longrepr)[-3500:])}")
